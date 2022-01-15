@@ -6,6 +6,8 @@ Data/obj
 
 Service/obj
 
+Tests/obj
+
 Web/bin
 Web/obj
 Web/Migrations

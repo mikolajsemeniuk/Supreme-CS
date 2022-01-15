@@ -3,6 +3,9 @@ get started using `dotnet 6.0.0`
 * Solution
 * Data
 * Service
+* API
+* Web
+* Tests
 ## Solution
 ```
 dotnet new sln -n Project
@@ -40,4 +43,9 @@ dotnet ef database update --project Web
 
 dotnet run --project Web
 dotnet watch --project Web
+```
+## Tests
+```
+dotnet new xunit -n Tests
+dotnet sln add Tests
 ```
