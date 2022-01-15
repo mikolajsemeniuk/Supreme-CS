@@ -1,0 +1,15 @@
+/API/obj
+/API/bin
+API/Migrations
+
+Data/obj
+
+Service/obj
+
+Web/bin
+Web/obj
+Web/Migrations
+
+project.db
+project.db-shm
+project.db-wal
