@@ -21,21 +21,20 @@ public class UpdateModel : PageModel
     public async Task<IActionResult> OnGet(Guid id)
     {
         var account = await _unit.Account.SingleAsync(account => account.Id == id, track: Track.NoTracking);
-        if (account != null)
+        if (account is null)
         {
-            Input.Id = account.Id;
-            Input.FullName = account.FullName;
-            Input.EmailAddress = account.EmailAddress;
-            Input.PhoneNumber = account.PhoneNumber;
-            Input.PersonalUrl = account.PersonalUrl;
-            Input.YearsOfAge = account.YearsOfAge;
-            Input.IsExternalContractor = account.IsExternalContractor;
-            Input.RelationshipStatus = account.RelationshipStatus;
-            Input.Note = account.Note;
-            return Page();
+            return RedirectToPage($"/NotFound", new { message = $"Account with id: {id} does not exist" });
         }
-        var message = $"Account with id: {id} does not exist";
-        return RedirectToPage($"/NotFound", new { message = message });
+        Input.Id = account.Id;
+        Input.FullName = account.FullName;
+        Input.EmailAddress = account.EmailAddress;
+        Input.PhoneNumber = account.PhoneNumber;
+        Input.PersonalUrl = account.PersonalUrl;
+        Input.YearsOfAge = account.YearsOfAge;
+        Input.IsExternalContractor = account.IsExternalContractor;
+        Input.RelationshipStatus = account.RelationshipStatus;
+        Input.Note = account.Note;
+        return Page();
     }
 
     public async Task<IActionResult> OnPost()

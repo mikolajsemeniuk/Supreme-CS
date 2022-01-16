@@ -40,10 +40,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
                 break;
         }
         query = skip == 0 ? query.Take(take) : query.Skip(skip).Take(take);
-        query = filter != null ? query.Where(filter) : query;
-        query = order != null ? order(query) : query;
-        query = include != null ? include(query) : query;
-        // query = select != null ? query.Select(select).AsQueryable<T>() : query;
+        query = filter is null ? query : query.Where(filter);
+        query = order is null ? query : order(query);
+        query = include is null ? query : include(query);
+        // query = select is null ? query : query.Select(select);
         return await query.ToListAsync();
     }
 
@@ -67,8 +67,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
                 query = query.AsTracking();
                 break;
         }
-        query = filter != null ? query.Where(filter) : query;
-        query = include != null ? include(query) : query;
+        query = filter is null ? query : query.Where(filter);
+        query = include is null ? query : include(query);
         return await query.SingleOrDefaultAsync();
     }
     
