@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Web.Pages;
+namespace Web.Pages.Errors;
 
 public class BadRequestModel : PageModel
 {

@@ -34,7 +34,7 @@ public class AddModel : PageModel
         {
             return RedirectToPage("/Accounts/Index");
         }
-        return RedirectToPage($"/BadRequest", new { message = "Error occured with database, try again later" });
+        return RedirectToPage($"/Errors/BadRequest", new { message = "Error occured with database, try again later" });
         
     }
 }

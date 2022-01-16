@@ -23,7 +23,7 @@ public class UpdateModel : PageModel
         var account = await _unit.Account.SingleAsync(account => account.Id == id, track: Track.NoTracking);
         if (account is null)
         {
-            return RedirectToPage($"/NotFound", new { message = $"Account with id: {id} does not exist" });
+            return RedirectToPage($"/Errors/NotFound", new { message = $"Account with id: {id} does not exist" });
         }
         Input.Id = account.Id;
         Input.FullName = account.FullName;
@@ -46,7 +46,7 @@ public class UpdateModel : PageModel
         var account = await _unit.Account.SingleAsync(account => account.Id == Input.Id);
         if (account is null)
         {
-            return RedirectToPage($"/NotFound", new { message = $"Account with id: {Input.Id} does not exist" });
+            return RedirectToPage($"/Errors/NotFound", new { message = $"Account with id: {Input.Id} does not exist" });
         }
         account.FullName = Input.FullName;
         account.EmailAddress = Input.EmailAddress;
@@ -61,6 +61,6 @@ public class UpdateModel : PageModel
         {
             return RedirectToPage("/Accounts/Index");
         }
-        return RedirectToPage($"/BadRequest", new { message = "Error occured with database, try again later" });
+        return RedirectToPage($"/Errors/BadRequest", new { message = "Error occured with database, try again later" });
     }
 }

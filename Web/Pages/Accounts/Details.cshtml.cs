@@ -21,7 +21,7 @@ public class DetailsModel : PageModel
         var account = await _unit.Account.SingleAsync(account => account.Id == id, track: Track.NoTracking);
         if (account is null)
         {
-            return RedirectToPage($"/NotFound", new { message = $"Account with id: {id} does not exist" });
+            return RedirectToPage($"/Errors/NotFound", new { message = $"Account with id: {id} does not exist" });
         }
         Account = account;
         return Page();

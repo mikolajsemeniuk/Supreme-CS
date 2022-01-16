@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Service.Interfaces;
 
-namespace Web.Pages;
+namespace Web.Pages.Errors;
 
 public class NotFoundModel : PageModel
 {
