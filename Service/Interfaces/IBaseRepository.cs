@@ -1,10 +1,11 @@
 using System.Linq.Expressions;
+using Data.Entities;
 using Microsoft.EntityFrameworkCore.Query;
 using Service.Enums;
 
 namespace Service.Interfaces;
 
-public interface IBaseRepository<T> where T : class
+public interface IBaseRepository<T> where T : BaseEntity
 {
     Task<IEnumerable<T>> AllAsync(
         Expression<Func<T, bool>>? filter = null,
