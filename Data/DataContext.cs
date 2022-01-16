@@ -8,5 +8,5 @@ public class DataContext : DbContext
     {
     }
 
-    public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<Account> Customers => Set<Account>();
 }

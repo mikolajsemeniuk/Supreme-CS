@@ -2,6 +2,6 @@ namespace Service.Interfaces;
 
 public interface IUnitOfWork : IDisposable
 {
-    ICustomerRepository Customer { get; }
+    IAccountRepository Account { get; }
     Task<int> SaveChangesAsync();
 }

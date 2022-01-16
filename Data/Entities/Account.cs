@@ -1,8 +1,8 @@
 namespace Data.Entities;
 
-public class Customer
+public class Account
 {
-    public Guid CustomerId { get; set; } = Guid.NewGuid();
+    public Guid AccountId { get; set; } = Guid.NewGuid();
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string EmailAddress { get; set; }
@@ -12,7 +12,7 @@ public class Customer
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime? UpdatedAt { get; set; }
 
-    public Customer(string firstName, string lastName, 
+    public Account(string firstName, string lastName, 
         string emailAddress, string phoneNumber, 
         string personalUrl, int yearsOfAge)
     {

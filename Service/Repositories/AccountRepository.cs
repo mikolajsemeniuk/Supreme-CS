@@ -4,10 +4,10 @@ using Service.Interfaces;
 
 namespace Service.Repositories;
 
-public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
+public class AccountRepository : BaseRepository<Account>, IAccountRepository
 {
     private readonly DataContext _context;
-    public CustomerRepository(DataContext context) : base(context)
+    public AccountRepository(DataContext context) : base(context)
     {
         _context = context;
     }
