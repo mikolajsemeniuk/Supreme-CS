@@ -40,6 +40,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         query = filter != null ? query.Where(filter) : query;
         query = order != null ? order(query) : query;
         query = include != null ? include(query) : query;
+        query = skip == 0 ? query.Take(take) : query.Skip(skip).Take(take);
         return await query.ToListAsync();
     }
 

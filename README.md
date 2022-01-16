@@ -3,7 +3,6 @@ get started using `dotnet 6.0.0`
 * Solution
 * Data
 * Service
-* API
 * Web
 * Tests
 ## Solution
@@ -19,18 +18,6 @@ dotnet sln add Data
 ```
 dotnet new classlib -n Service
 dotnet sln add Service
-```
-## API
-```
-dotnet new webapi -n API
-dotnet sln add API
-dotnet dev-certs https --project API --trust
-
-dotnet ef migrations add Initial --project API
-dotnet ef database update --project API
-
-dotnet run --project API
-dotnet watch --project API
 ```
 ## Web
 ```
