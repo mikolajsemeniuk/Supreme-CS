@@ -4,12 +4,16 @@ using Service.Interfaces;
 using Service.Repositories;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Microsoft.Extensions.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation().AddMvcOptions(options =>
+{
+    options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(_ => "The field is required.");
+});
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"), migration => migration.MigrationsAssembly("Web"));

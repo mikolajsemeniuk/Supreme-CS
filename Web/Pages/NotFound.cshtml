@@ -1,0 +1,12 @@
+@page
+@model NotFoundModel
+
+<h1>
+    NotFound
+</h1>
+@if (Model.Message is not null)
+{
+    <p>
+        @Model.Message
+    </p>
+    }

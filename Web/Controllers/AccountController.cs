@@ -49,12 +49,13 @@ public class AccountController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces("application/json")]
-    public async Task<ActionResult> Add([FromBody] AccountInput input)
+    public async Task<ActionResult> Add([FromBody] AddAccountInput input)
     {
-        var account = new Account(input.FirstName, input.LastName, 
-            input.EmailAddress, input.PhoneNumber, 
-            input.PersonalUrl, input.YearsOfAge, 
-            input.RelationshipStatus);
+        var account = new Account(input.FullName,
+            input.EmailAddress, input.PhoneNumber,
+            input.PersonalUrl, input.YearsOfAge,
+            input.IsExternalContractor, input.RelationshipStatus,
+            input.Note);
         _unit.Account.Add(account);
         if (await _unit.SaveChangesAsync() > 0)
         {
@@ -71,19 +72,20 @@ public class AccountController : BaseController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces("application/json")]
-    public async Task<ActionResult> Update(Guid id, [FromBody] AccountInput input)
+    public async Task<ActionResult> Update(Guid id, [FromBody] AddAccountInput input)
     {
         var account = await _unit.Account.SingleAsync(account => account.Id == id);
         if (account is null)
         {
             return NotFound();
         }
-        account.FirstName = input.FirstName;
-        account.LastName = input.LastName;
+        account.FullName = input.FullName;
         account.EmailAddress = input.EmailAddress;
         account.PhoneNumber = input.PhoneNumber;
         account.PersonalUrl = input.PersonalUrl;
         account.YearsOfAge = input.YearsOfAge;
+        account.Note = input.Note;
+        account.IsExternalContractor = input.IsExternalContractor;
         account.RelationshipStatus = input.RelationshipStatus;
         _unit.Account.Update(account);
         if (await _unit.SaveChangesAsync() > 0)

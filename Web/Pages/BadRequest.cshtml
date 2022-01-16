@@ -1,0 +1,12 @@
+@page
+@model BadRequestModel
+
+<h1>
+    Something goes wrong :(
+</h1>
+@if(Model.Message is not null)
+{
+    <p>
+        @Model.Message
+    </p>
+}

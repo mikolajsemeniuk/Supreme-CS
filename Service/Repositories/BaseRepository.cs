@@ -22,7 +22,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     public async Task<IEnumerable<T>> AllAsync(
         Expression<Func<T, bool>>? filter = null, 
         Func<IQueryable<T>, IOrderedQueryable<T>>? order = null, 
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, 
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+        // Expression<Func<T, TType>>? select = null,
         int skip = 0, int take = int.MaxValue, Track track = Track.NoTracking)
     {
         IQueryable<T> query = _set;
@@ -38,16 +39,18 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
                 query = query.AsTracking();
                 break;
         }
+        query = skip == 0 ? query.Take(take) : query.Skip(skip).Take(take);
         query = filter != null ? query.Where(filter) : query;
         query = order != null ? order(query) : query;
         query = include != null ? include(query) : query;
-        query = skip == 0 ? query.Take(take) : query.Skip(skip).Take(take);
+        // query = select != null ? query.Select(select).AsQueryable<T>() : query;
         return await query.ToListAsync();
     }
 
     public async Task<T?> SingleAsync(
         Expression<Func<T, bool>> filter,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+        // Expression<Func<T, object>>? select = null,
         Track track = Track.Tracking)
     {
 
