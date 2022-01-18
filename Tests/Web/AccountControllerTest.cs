@@ -24,9 +24,7 @@ public class AccountControllerTest
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
         
-        mock.Setup(mock => mock.Account
-            .AllAsync(null, null, null, 0, int.MaxValue, Track.NoTracking))
-            .Returns(Task.FromResult(expected));
+        mock.Setup(mock => mock.Account.AllAsync(null, null, null, 0, int.MaxValue, Track.NoTracking)).Returns(Task.FromResult(expected));
 
         // Act
         var response = await controller.Get();
@@ -48,9 +46,7 @@ public class AccountControllerTest
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
-        mock.Setup(mock => mock.Account
-            .SingleAsync(account => account.Id == id, null, Track.NoTracking))
-            .Returns(Task.FromResult(expected)!);
+        mock.Setup(mock => mock.Account.SingleAsync(account => account.Id == id, null, Track.NoTracking)).Returns(Task.FromResult(expected)!);
 
         // Act
         var response = await controller.GetById(id);
@@ -72,9 +68,7 @@ public class AccountControllerTest
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
-        mock.Setup(mock => mock.Account
-            .SingleAsync(x => x.Id == id, null, Track.NoTracking))
-            .Returns(Task.FromResult(expected));        
+        mock.Setup(mock => mock.Account.SingleAsync(x => x.Id == id, null, Track.NoTracking)).Returns(Task.FromResult(expected));        
 
         // Act
         var response = await controller.GetById(id);
@@ -112,6 +106,7 @@ public class AccountControllerTest
     {
         // Arrange
         var input = new AddAccountInput();
+
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
@@ -133,25 +128,25 @@ public class AccountControllerTest
         // Arrange
         var id = Guid.NewGuid();
         var input = new AddAccountInput();
-        var account = new Account("john doe", "john@doe.com", "123456789", "http://john.com", 21, true, RelationshipStatus.Other, "some note");
+        var expected = new Account("john doe", "john@doe.com", "123456789", "http://john.com", 21, true, RelationshipStatus.Other, "some note");
 
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
-        mock.Setup(mock => mock.Account
-            .SingleAsync(x => x.Id == id, null, Track.Tracking))
-            .Returns(Task.FromResult(account)!);
+        mock.Setup(mock => mock.Account.SingleAsync(x => x.Id == id, null, Track.Tracking)).Returns(Task.FromResult(expected)!);
         mock.Setup(mock => mock.Account.Update(It.IsAny<Account>()));
         mock.Setup(mock => mock.SaveChangesAsync()).Returns(Task.FromResult(1));
 
         // Act
         var response = await controller.Update(id, input);
+        var actual = (response.Result as ObjectResult)?.Value;
 
         // Assert
         Assert.IsAssignableFrom<OkObjectResult>(response.Result);
         mock.Verify(mock => mock.Account.SingleAsync(x => x.Id == id, null, Track.Tracking), Times.Once);
         mock.Verify(mock => mock.Account.Update(It.IsAny<Account>()), Times.Once);
         mock.Verify(mock => mock.SaveChangesAsync(), Times.Once);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
@@ -165,9 +160,7 @@ public class AccountControllerTest
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
-        mock.Setup(mock => mock.Account
-            .SingleAsync(x => x.Id == id, null, Track.Tracking))
-            .Returns(Task.FromResult(account));
+        mock.Setup(mock => mock.Account.SingleAsync(x => x.Id == id, null, Track.Tracking)).Returns(Task.FromResult(account));
         mock.Setup(mock => mock.Account.Update(It.IsAny<Account>()));
         mock.Setup(mock => mock.SaveChangesAsync()).Returns(Task.FromResult(1));
 
@@ -192,9 +185,7 @@ public class AccountControllerTest
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
-        mock.Setup(mock => mock.Account
-            .SingleAsync(x => x.Id == id, default, default))
-            .Returns(Task.FromResult(account)!);
+        mock.Setup(mock => mock.Account.SingleAsync(x => x.Id == id, default, default)).Returns(Task.FromResult(account)!);
         mock.Setup(mock => mock.Account.Update(It.IsAny<Account>()));
         mock.Setup(mock => mock.SaveChangesAsync()).Returns(Task.FromResult(0));
 
@@ -218,9 +209,7 @@ public class AccountControllerTest
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
-        mock.Setup(mock => mock.Account
-            .SingleAsync(x => x.Id == id, default, default))
-            .Returns(Task.FromResult(account)!);
+        mock.Setup(mock => mock.Account.SingleAsync(x => x.Id == id, default, default)).Returns(Task.FromResult(account)!);
         mock.Setup(mock => mock.Account.Remove(It.IsAny<Account>()));
         mock.Setup(mock => mock.SaveChangesAsync()).Returns(Task.FromResult(1));
 
@@ -244,9 +233,7 @@ public class AccountControllerTest
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
-        mock.Setup(mock => mock.Account
-            .SingleAsync(x => x.Id == id, default, default))
-            .Returns(Task.FromResult(account));
+        mock.Setup(mock => mock.Account.SingleAsync(x => x.Id == id, default, default)).Returns(Task.FromResult(account));
         mock.Setup(mock => mock.Account.Remove(It.IsAny<Account>()));
         mock.Setup(mock => mock.SaveChangesAsync()).Returns(Task.FromResult(1));
 
@@ -270,9 +257,7 @@ public class AccountControllerTest
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
-        mock.Setup(mock => mock.Account
-            .SingleAsync(x => x.Id == id, default, default))
-            .Returns(Task.FromResult(account)!);
+        mock.Setup(mock => mock.Account.SingleAsync(x => x.Id == id, default, default)).Returns(Task.FromResult(account)!);
         mock.Setup(mock => mock.Account.Remove(It.IsAny<Account>()));
         mock.Setup(mock => mock.SaveChangesAsync()).Returns(Task.FromResult(0));
 
