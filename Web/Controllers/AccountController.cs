@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Service.Enums;
@@ -19,8 +20,10 @@ public class AccountController : BaseController
     /// Get All Accounts
     /// </summary>
     [HttpGet]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> Get()
+    public async Task<ActionResult<IEnumerable<Account>>> Get()
     {
         return Ok(await _unit.Account.AllAsync());
     }
@@ -29,10 +32,11 @@ public class AccountController : BaseController
     /// Get Account by id
     /// </summary>
     [HttpGet("{id}")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Produces("application/json")]
-    public async Task<ActionResult> Get(Guid id)
+    public async Task<ActionResult<Account>> GetById(Guid id)
     {
         var customer = await _unit.Account.SingleAsync(customer => customer.Id == id, track: Track.NoTracking);
         if (customer is null)
@@ -46,10 +50,11 @@ public class AccountController : BaseController
     /// Add account
     /// </summary>
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Produces("application/json")]
-    public async Task<ActionResult> Add([FromBody] AddAccountInput input)
+    public async Task<ActionResult<Account>> Add([FromBody] AddAccountInput input)
     {
         var account = new Account(input.FullName,
             input.EmailAddress, input.PhoneNumber,
@@ -59,7 +64,7 @@ public class AccountController : BaseController
         _unit.Account.Add(account);
         if (await _unit.SaveChangesAsync() > 0)
         {
-            return Ok(account);
+            return CreatedAtAction(nameof(GetById), new { id = account.Id }, account);
         }
         return BadRequest();
     }
@@ -68,11 +73,12 @@ public class AccountController : BaseController
     /// Update account
     /// </summary>
     [HttpPatch("{id}")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Produces("application/json")]
-    public async Task<ActionResult> Update(Guid id, [FromBody] AddAccountInput input)
+    public async Task<ActionResult<Account>> Update(Guid id, [FromBody] AddAccountInput input)
     {
         var account = await _unit.Account.SingleAsync(account => account.Id == id);
         if (account is null)
@@ -99,11 +105,12 @@ public class AccountController : BaseController
     /// Remove account
     /// </summary>
     [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Produces("application/json")]
-    public async Task<ActionResult> Remove(Guid id)
+    public async Task<ActionResult<object>> Remove(Guid id)
     {
         var account = await _unit.Account.SingleAsync(account => account.Id == id);
         if (account is null)
@@ -113,7 +120,7 @@ public class AccountController : BaseController
         _unit.Account.Remove(account);
         if (await _unit.SaveChangesAsync() > 0)
         {
-            return Ok(account);
+            return NoContent();
         }
         return BadRequest();
     }

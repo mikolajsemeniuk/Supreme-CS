@@ -35,4 +35,6 @@ dotnet watch --project Web
 ```
 dotnet new xunit -n Tests
 dotnet sln add Tests
+
+dotnet test Tests
 ```
