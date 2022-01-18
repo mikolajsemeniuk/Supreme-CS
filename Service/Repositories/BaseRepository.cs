@@ -23,7 +23,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
         Expression<Func<T, bool>>? filter = null, 
         Func<IQueryable<T>, IOrderedQueryable<T>>? order = null, 
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-        // Expression<Func<T, TType>>? select = null,
         int skip = 0, int take = int.MaxValue, Track track = Track.NoTracking)
     {
         IQueryable<T> query = _set;
@@ -43,14 +42,12 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
         query = filter is null ? query : query.Where(filter);
         query = order is null ? query : order(query);
         query = include is null ? query : include(query);
-        // query = select is null ? query : query.Select(select);
         return await query.ToListAsync();
     }
 
     public async Task<T?> SingleAsync(
         Expression<Func<T, bool>> filter,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-        // Expression<Func<T, object>>? select = null,
         Track track = Track.Tracking)
     {
 
