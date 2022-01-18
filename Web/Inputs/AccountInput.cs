@@ -1,11 +1,14 @@
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Data.Enums;
 
 namespace Web.Inputs;
 
-public class AddAccountInput
+public class AccountInput
 {
+    [JsonIgnore]
+    public Guid Id { get; set; } = Guid.Empty;
+
     [Display(Name = "Full Name")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Whitespaces are not allowed")]
     [StringLength(100, MinimumLength = 5, ErrorMessage = "{0} has to be {2} characters minimum and {1} characters maximum")]

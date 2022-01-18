@@ -11,7 +11,7 @@ public class AddModel : PageModel
     private readonly IUnitOfWork _unit;
 
     [BindProperty]
-    public AddAccountInput Input { get; set; } = new();
+    public AccountInput Input { get; set; } = new();
 
     public AddModel(IUnitOfWork unit)
     {

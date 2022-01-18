@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Service.Enums;
 using Service.Interfaces;
 using Web.Inputs;
@@ -25,7 +26,7 @@ public class AccountController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Account>>> Get()
     {
-        return Ok(await _unit.Account.AllAsync());
+        return Ok(await _unit.Account.AllAsync(include: account => account.Include(account => account.Orders)));
     }
 
     /// <summary>
@@ -54,7 +55,7 @@ public class AccountController : BaseController
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Account>> Add([FromBody] AddAccountInput input)
+    public async Task<ActionResult<Account>> Add([FromBody] AccountInput input)
     {
         var account = new Account(input.FullName,
             input.EmailAddress, input.PhoneNumber,
@@ -78,7 +79,7 @@ public class AccountController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Account>> Update(Guid id, [FromBody] AddAccountInput input)
+    public async Task<ActionResult<Account>> Update(Guid id, [FromBody] AccountInput input)
     {
         var account = await _unit.Account.SingleAsync(account => account.Id == id);
         if (account is null)

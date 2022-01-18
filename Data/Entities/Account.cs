@@ -12,6 +12,7 @@ public class Account : BaseEntity
     public bool IsExternalContractor { get; set; }
     public RelationshipStatus RelationshipStatus { get; set; }
     public string Note { get; set; }
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public Account(string fullName,
         string emailAddress, string phoneNumber, 

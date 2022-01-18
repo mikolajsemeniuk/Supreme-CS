@@ -11,7 +11,7 @@ public class UpdateModel : PageModel
     private readonly IUnitOfWork _unit;
     
     [BindProperty]
-    public UpdateAccountInput Input { get; set; } = new();
+    public AccountInput Input { get; set; } = new();
 
     public UpdateModel(IUnitOfWork unit)
     {

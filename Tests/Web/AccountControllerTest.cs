@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Data.Entities;
 using Data.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Service.Enums;
 using Service.Interfaces;
@@ -24,7 +26,9 @@ public class AccountControllerTest
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
         
-        mock.Setup(mock => mock.Account.AllAsync(null, null, null, 0, int.MaxValue, Track.NoTracking)).Returns(Task.FromResult(expected));
+        mock.Setup(mock => mock.Account
+            .AllAsync(null, null, It.IsAny<Func<IQueryable<Account>, IIncludableQueryable<Account, object>>?>(), 0, int.MaxValue, Track.NoTracking))
+            .Returns(Task.FromResult(expected));
 
         // Act
         var response = await controller.Get();
@@ -32,7 +36,7 @@ public class AccountControllerTest
 
         // Assert
         Assert.IsAssignableFrom<OkObjectResult>(response.Result);
-        mock.Verify(mock => mock.Account.AllAsync(null, null, null, 0, int.MaxValue, Track.NoTracking), Times.Once);
+        mock.Verify(mock => mock.Account.AllAsync(null, null, It.IsAny<Func<IQueryable<Account>, IIncludableQueryable<Account, object>>?>(), 0, int.MaxValue, Track.NoTracking), Times.Once);
         Assert.Equal(expected, actual);
     }
 
@@ -84,7 +88,7 @@ public class AccountControllerTest
     public async Task Add_ShouldReturn_CreatedResult()
     {
         // Arrange
-        var input = new AddAccountInput();
+        var input = new AccountInput();
 
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
@@ -105,7 +109,7 @@ public class AccountControllerTest
     public async Task Add_ShouldReturn_BadRequestResult()
     {
         // Arrange
-        var input = new AddAccountInput();
+        var input = new AccountInput();
 
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
@@ -127,7 +131,7 @@ public class AccountControllerTest
     {
         // Arrange
         var id = Guid.NewGuid();
-        var input = new AddAccountInput();
+        var input = new AccountInput();
         var expected = new Account("john doe", "john@doe.com", "123456789", "http://john.com", 21, true, RelationshipStatus.Other, "some note");
 
         var mock = new Mock<IUnitOfWork>();
@@ -154,7 +158,7 @@ public class AccountControllerTest
     {
         // Arrange
         var id = Guid.NewGuid();
-        var input = new AddAccountInput();
+        var input = new AccountInput();
         Account? account = null;
 
         var mock = new Mock<IUnitOfWork>();
@@ -179,7 +183,7 @@ public class AccountControllerTest
     {
         // Arrange
         var id = Guid.NewGuid();
-        var input = new AddAccountInput();
+        var input = new AccountInput();
         var account = new Account("john doe", "john@doe.com", "123456789", "http://john.com", 21, true, RelationshipStatus.Other, "some note");
 
         var mock = new Mock<IUnitOfWork>();
