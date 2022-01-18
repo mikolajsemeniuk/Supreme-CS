@@ -38,7 +38,7 @@ public class AccountController : BaseController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<Account>> GetById(Guid id)
     {
-        var customer = await _unit.Account.SingleAsync(customer => customer.Id == id, track: Track.NoTracking);
+        var customer = await _unit.Account.SingleAsync(account => account.Id == id, track: Track.NoTracking);
         if (customer is null)
         {
             return NotFound();

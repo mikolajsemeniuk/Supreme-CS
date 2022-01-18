@@ -19,20 +19,23 @@ public class AccountControllerTest
     public async Task Get_ShouldReturn_OkResult()
     {
         // Arrange
-        IEnumerable<Account> accounts = new List<Account>();
-
+        IEnumerable<Account> expected = new List<Account>();
+        
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
-
+        
         mock.Setup(mock => mock.Account
-            .AllAsync(default, default, default, default, default, default))
-            .Returns(Task.FromResult(accounts));
+            .AllAsync(null, null, null, 0, int.MaxValue, Track.NoTracking))
+            .Returns(Task.FromResult(expected));
 
         // Act
         var response = await controller.Get();
+        var actual = (response.Result as ObjectResult)?.Value;
 
         // Assert
         Assert.IsAssignableFrom<OkObjectResult>(response.Result);
+        mock.Verify(mock => mock.Account.AllAsync(null, null, null, 0, int.MaxValue, Track.NoTracking), Times.Once);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
@@ -40,20 +43,23 @@ public class AccountControllerTest
     {
         // Arrange
         var id = Guid.NewGuid();
-        var account = new Account("john doe", "john@doe.com", "123456789", "http://john.com", 21, true, RelationshipStatus.Other, "some note");
-
+        var expected = new Account("john doe", "john@doe.com", "123456789", "http://john.com", 21, true, RelationshipStatus.Other, "some note");
+        
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
         mock.Setup(mock => mock.Account
-            .SingleAsync(account => account.Id == id, default, Track.NoTracking))
-            .Returns(Task.FromResult(account)!);
+            .SingleAsync(account => account.Id == id, null, Track.NoTracking))
+            .Returns(Task.FromResult(expected)!);
 
         // Act
         var response = await controller.GetById(id);
-        
+        var actual = (response.Result as ObjectResult)?.Value;
+
         // Assert
         Assert.IsAssignableFrom<OkObjectResult>(response.Result);
+        mock.Verify(mock => mock.Account.SingleAsync(account => account.Id == id, null, Track.NoTracking), Times.Once);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
@@ -61,20 +67,23 @@ public class AccountControllerTest
     {
         // Arrange
         var id = Guid.NewGuid();
-        Account? account = null;
+        Account? expected = null;
 
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
         mock.Setup(mock => mock.Account
-            .SingleAsync(x => x.Id == id, default, Track.NoTracking))
-            .Returns(Task.FromResult(account));        
+            .SingleAsync(x => x.Id == id, null, Track.NoTracking))
+            .Returns(Task.FromResult(expected));        
 
         // Act
         var response = await controller.GetById(id);
+        var actual = (response.Result as ObjectResult)?.Value;
 
         // Assert
         Assert.IsAssignableFrom<NotFoundResult>(response.Result);
+        mock.Verify(mock => mock.Account.SingleAsync(account => account.Id == id, null, Track.NoTracking), Times.Once);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
@@ -94,6 +103,8 @@ public class AccountControllerTest
 
         // Assert
         Assert.IsAssignableFrom<CreatedAtActionResult>(response.Result);
+        mock.Verify(mock => mock.Account.Add(It.IsAny<Account>()), Times.Once);
+        mock.Verify(mock => mock.SaveChangesAsync(), Times.Once);
     }
 
     [Fact]
@@ -101,7 +112,6 @@ public class AccountControllerTest
     {
         // Arrange
         var input = new AddAccountInput();
-
         var mock = new Mock<IUnitOfWork>();
         var controller = new AccountController(mock.Object);
 
@@ -113,6 +123,8 @@ public class AccountControllerTest
 
         // Assert
         Assert.IsAssignableFrom<BadRequestResult>(response.Result);
+        mock.Verify(mock => mock.Account.Add(It.IsAny<Account>()), Times.Once);
+        mock.Verify(mock => mock.SaveChangesAsync(), Times.Once);
     }
 
     [Fact]
@@ -127,7 +139,7 @@ public class AccountControllerTest
         var controller = new AccountController(mock.Object);
 
         mock.Setup(mock => mock.Account
-            .SingleAsync(x => x.Id == id, default, default))
+            .SingleAsync(x => x.Id == id, null, Track.Tracking))
             .Returns(Task.FromResult(account)!);
         mock.Setup(mock => mock.Account.Update(It.IsAny<Account>()));
         mock.Setup(mock => mock.SaveChangesAsync()).Returns(Task.FromResult(1));
@@ -137,6 +149,9 @@ public class AccountControllerTest
 
         // Assert
         Assert.IsAssignableFrom<OkObjectResult>(response.Result);
+        mock.Verify(mock => mock.Account.SingleAsync(x => x.Id == id, null, Track.Tracking), Times.Once);
+        mock.Verify(mock => mock.Account.Update(It.IsAny<Account>()), Times.Once);
+        mock.Verify(mock => mock.SaveChangesAsync(), Times.Once);
     }
 
     [Fact]
@@ -151,19 +166,19 @@ public class AccountControllerTest
         var controller = new AccountController(mock.Object);
 
         mock.Setup(mock => mock.Account
-            .SingleAsync(x => x.Id == id, default, default))
+            .SingleAsync(x => x.Id == id, null, Track.Tracking))
             .Returns(Task.FromResult(account));
         mock.Setup(mock => mock.Account.Update(It.IsAny<Account>()));
         mock.Setup(mock => mock.SaveChangesAsync()).Returns(Task.FromResult(1));
-        // mock.Verify(mock => mock.Account.SingleAsync(x => x.Id == id, default, default), Times.Once);
-        // mock.Verify(mock => mock.Account.Update(It.IsAny<Account>()), Times.Never);
-        // mock.Verify(mock => mock.SaveChangesAsync(), Times.Never);
 
         // Act
         var response = await controller.Update(id, input);
 
         // Assert
         Assert.IsAssignableFrom<NotFoundResult>(response.Result);
+        mock.Verify(mock => mock.Account.SingleAsync(x => x.Id == id, null, Track.Tracking), Times.Once);
+        mock.Verify(mock => mock.Account.Update(It.IsAny<Account>()), Times.Never);
+        mock.Verify(mock => mock.SaveChangesAsync(), Times.Never);
     }
 
     [Fact]
@@ -188,6 +203,9 @@ public class AccountControllerTest
 
         // Assert
         Assert.IsAssignableFrom<BadRequestResult>(response.Result);
+        mock.Verify(mock => mock.Account.SingleAsync(x => x.Id == id, null, Track.Tracking), Times.Once);
+        mock.Verify(mock => mock.Account.Update(It.IsAny<Account>()), Times.Once);
+        mock.Verify(mock => mock.SaveChangesAsync(), Times.Once);
     }
 
     [Fact]
@@ -211,6 +229,9 @@ public class AccountControllerTest
 
         // Assert
         Assert.IsAssignableFrom<NoContentResult>(response.Result);
+        mock.Verify(mock => mock.Account.SingleAsync(x => x.Id == id, null, Track.Tracking), Times.Once);
+        mock.Verify(mock => mock.Account.Remove(It.IsAny<Account>()), Times.Once);
+        mock.Verify(mock => mock.SaveChangesAsync(), Times.Once);
     }
 
     [Fact]
@@ -234,6 +255,9 @@ public class AccountControllerTest
 
         // Assert
         Assert.IsAssignableFrom<NotFoundResult>(response.Result);
+        mock.Verify(mock => mock.Account.SingleAsync(x => x.Id == id, null, Track.Tracking), Times.Once);
+        mock.Verify(mock => mock.Account.Remove(It.IsAny<Account>()), Times.Never);
+        mock.Verify(mock => mock.SaveChangesAsync(), Times.Never);
     }
 
     [Fact]
@@ -257,5 +281,8 @@ public class AccountControllerTest
 
         // Assert
         Assert.IsAssignableFrom<BadRequestResult>(response.Result);
+        mock.Verify(mock => mock.Account.SingleAsync(x => x.Id == id, null, Track.Tracking), Times.Once);
+        mock.Verify(mock => mock.Account.Remove(It.IsAny<Account>()), Times.Once);
+        mock.Verify(mock => mock.SaveChangesAsync(), Times.Once);
     }
 }
