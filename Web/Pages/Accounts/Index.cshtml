@@ -14,39 +14,42 @@
 <table class="table table-striped">
     <thead>
         <tr>
-        <th scope="col">
-            Index
-        </th>
-        <th scope="col">
-            Full Name
-        </th>
-        <th scope="col">
-            Email Address
-        </th>
-        <th scope="col">
-            Phone Number
-        </th>
-        <th scope="col">
-            Personal Url
-        </th>
-        <th scope="col">
-            Years Of Age
-        </th>
-        <th scope="col">
-            Is External Contractor
-        </th>
-        <th scope="col">
-            Relationship Status
-        </th>
-        <th scope="col">
-
-        </th>
-        <th scope="col">
-
-        </th>
-        <th scope="col">
-
-        </th>
+            <th scope="col">
+                Index
+            </th>
+            <th scope="col">
+                Full Name
+            </th>
+            <th scope="col">
+                Email Address
+            </th>
+            <th scope="col">
+                Phone Number
+            </th>
+            <th scope="col">
+                Personal Url
+            </th>
+            <th scope="col">
+                Years Of Age
+            </th>
+            <th scope="col">
+                Is External Contractor
+            </th>
+            <th scope="col">
+                Relationship Status
+            </th>
+            <th scope="col">
+                Orders
+            </th>
+            <th scope="col">
+                Details
+            </th>
+            <th scope="col">
+                Update
+            </th>
+            <th scope="col">
+                Remove
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -77,6 +80,11 @@
                 </td>
                 <td>
                     @account.RelationshipStatus
+                </td>
+                <td>
+                    <a asp-page="/Orders/Index" asp-route-id="@account.Id" class="btn btn-success text-white">
+                        Orders
+                    </a>
                 </td>
                 <td>
                     <a asp-page="/Accounts/Details" asp-route-id="@account.Id" class="btn btn-info text-white">

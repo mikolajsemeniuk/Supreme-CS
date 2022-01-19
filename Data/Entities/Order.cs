@@ -9,6 +9,7 @@ public class Order : BaseEntity
     public OrderStatus OrderStatus { get; set; } = OrderStatus.Awaiting;
     public long FailureCounter { get; set; } = 0;
     public Guid AccountId { get; set; }
+    
     [JsonIgnore]
     public Account Account { get; set; } = null!;
 

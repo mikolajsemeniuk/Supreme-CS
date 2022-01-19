@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using Data.Entities;
+using Data.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Service.Enums;
 using Service.Interfaces;
@@ -10,6 +11,7 @@ namespace Web.Controllers;
 public class OrderController : BaseController
 {
     private readonly IUnitOfWork _unit;
+    private Random Random = new();
 
     public OrderController(IUnitOfWork unit)
     {
@@ -17,7 +19,7 @@ public class OrderController : BaseController
     }
 
     /// <summary>
-    /// Get All Orders
+    /// Get all orders
     /// </summary>
     [HttpGet]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -29,7 +31,7 @@ public class OrderController : BaseController
     }
 
     /// <summary>
-    /// Get Order by id
+    /// Get order by id
     /// </summary>
     [HttpGet("{id}")]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -47,7 +49,7 @@ public class OrderController : BaseController
     }
 
     /// <summary>
-    /// Add Order
+    /// Add order
     /// </summary>
     [HttpPost("{accountId}")]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -62,6 +64,50 @@ public class OrderController : BaseController
         {
             return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
         }
+        return BadRequest();
+    }
+
+    /// <summary>
+    /// Process orders
+    /// </summary>
+    [HttpPost("process")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> Proccess()
+    {
+        var orders = await _unit.Order.AllAsync(
+            filter: order => order.OrderStatus == OrderStatus.Awaiting || order.OrderStatus == OrderStatus.Open,
+            track: Track.Tracking);
+
+        var x = Random.NextDouble() > 0.5;
+
+        orders.ToList().ForEach(order => 
+        {
+            if (Random.NextDouble() > 0.6)
+            {
+                order.OrderStatus = OrderStatus.Resolved;
+            }
+            else
+            {
+                if (order.FailureCounter < 3)
+                {
+                    order.OrderStatus = OrderStatus.Open;
+                    order.FailureCounter += 1;
+                }
+                else
+                {
+                    order.OrderStatus = OrderStatus.Rejected;
+                }
+            }
+            _unit.Order.Update(order);
+        });
+        if (await _unit.SaveChangesAsync() > 0)
+        {
+            return Ok();
+        }
+
         return BadRequest();
     }
 

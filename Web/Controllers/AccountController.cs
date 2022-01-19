@@ -18,7 +18,7 @@ public class AccountController : BaseController
     }
 
     /// <summary>
-    /// Get All Accounts
+    /// Get all accounts
     /// </summary>
     [HttpGet]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -30,7 +30,7 @@ public class AccountController : BaseController
     }
 
     /// <summary>
-    /// Get Account by id
+    /// Get account by id
     /// </summary>
     [HttpGet("{id}")]
     [Consumes(MediaTypeNames.Application.Json)]

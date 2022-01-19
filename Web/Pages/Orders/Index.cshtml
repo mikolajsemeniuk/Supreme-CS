@@ -1,0 +1,71 @@
+@page
+@model Orders.IndexModel
+@{
+    ViewData["Title"] = "Orders Page";
+}
+
+<h1 class="mt-5">
+    All Orders
+</h1>
+<hr>
+<a asp-page="/Accounts/Add" class="btn btn-primary mb-5">
+    Add Order
+</a>
+<a asp-page="/Accounts/Index" class="btn btn-secondary mb-5">
+    Go back
+</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">
+                Index
+            </th>
+            <th scope="col">
+                Name
+            </th>
+            <th scope="col">
+                Order Status
+            </th>
+            <th scope="col">
+                Failure Counter
+            </th>
+            <th scope="col">
+                Update
+            </th>
+            <th scope="col">
+                Remove
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int index = 0; }
+        @foreach(var order in Model.Orders)
+        {
+            <tr>
+                <th scope="row">
+                    @index
+                </th>
+                <td>
+                    @order.Name
+                </td>
+                <td>
+                    @order.OrderStatus
+                </td>
+                <td>
+                    @order.FailureCounter
+                </td>
+                <td>
+                    <a asp-page="/Accounts/Update" asp-route-id="@order.Id" class="btn btn-warning text-white">
+                        Update
+                    </a>
+                </td>
+                <td>
+                    <a asp-page="/Accounts/Remove" asp-route-id="@order.Id" class="btn btn-danger">
+                        Remove
+                    </a>
+                </td>
+            </tr>
+            { index++; }
+        }
+    </tbody>
+</table>
