@@ -19,6 +19,6 @@ public class AddModel : PageModel
 
     public async Task OnPost()
     {
-        
+        await Task.Delay(TimeSpan.FromSeconds(1));
     }
 }
