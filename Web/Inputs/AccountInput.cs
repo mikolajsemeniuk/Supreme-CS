@@ -7,7 +7,7 @@ namespace Web.Inputs;
 public class AccountInput
 {
     [JsonIgnore]
-    public Guid Id { get; set; } = Guid.Empty;
+    public Guid AccountId { get; set; } = Guid.Empty;
 
     [Display(Name = "Full Name")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Whitespaces are not allowed")]

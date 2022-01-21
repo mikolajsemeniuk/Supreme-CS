@@ -6,7 +6,7 @@ namespace Web.Inputs;
 public class OrderInput
 {
     [JsonIgnore]
-    public Guid Id { get; set; } = Guid.Empty;
+    public Guid OrderId { get; set; } = Guid.Empty;
     
     [Display(Name = "Name")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Whitespaces are not allowed")]

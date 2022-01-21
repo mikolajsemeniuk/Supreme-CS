@@ -8,7 +8,7 @@ using Data.Entities;
 
 namespace Service.Repositories;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
+public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     private readonly DataContext _context;
     internal DbSet<T> _set;
@@ -76,7 +76,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
 
     public void Update(T entity)
     {
-        entity.UpdatedAt = DateTime.Now;
         _context.Entry(entity).State = EntityState.Modified;
     }
 

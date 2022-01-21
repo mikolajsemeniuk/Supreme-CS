@@ -32,14 +32,14 @@ public class AccountController : BaseController
     /// <summary>
     /// Get account by id
     /// </summary>
-    [HttpGet("{id}")]
+    [HttpGet("{accountId}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Account>> GetById(Guid id)
+    public async Task<ActionResult<Account>> GetById(Guid accountId)
     {
-        var customer = await _unit.Account.SingleAsync(account => account.Id == id, track: Track.NoTracking);
+        var customer = await _unit.Account.SingleAsync(account => account.AccountId == accountId, track: Track.NoTracking);
         if (customer is null)
         {
             return NotFound();
@@ -65,7 +65,7 @@ public class AccountController : BaseController
         _unit.Account.Add(account);
         if (await _unit.SaveChangesAsync() > 0)
         {
-            return CreatedAtAction(nameof(GetById), new { id = account.Id }, account);
+            return CreatedAtAction(nameof(GetById), new { accountId = account.AccountId }, account);
         }
         return BadRequest();
     }
@@ -73,15 +73,15 @@ public class AccountController : BaseController
     /// <summary>
     /// Update account
     /// </summary>
-    [HttpPatch("{id}")]
+    [HttpPatch("{accountId}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Account>> Update(Guid id, [FromBody] AccountInput input)
+    public async Task<ActionResult<Account>> Update(Guid accountId, [FromBody] AccountInput input)
     {
-        var account = await _unit.Account.SingleAsync(account => account.Id == id);
+        var account = await _unit.Account.SingleAsync(account => account.AccountId == accountId);
         if (account is null)
         {
             return NotFound();
@@ -94,6 +94,7 @@ public class AccountController : BaseController
         account.Note = input.Note;
         account.IsExternalContractor = input.IsExternalContractor;
         account.RelationshipStatus = input.RelationshipStatus;
+        account.UpdatedAt = DateTime.Now;
         _unit.Account.Update(account);
         if (await _unit.SaveChangesAsync() > 0)
         {
@@ -105,15 +106,15 @@ public class AccountController : BaseController
     /// <summary>
     /// Remove account
     /// </summary>
-    [HttpDelete("{id}")]
+    [HttpDelete("{accountId}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<object>> Remove(Guid id)
+    public async Task<ActionResult<object>> Remove(Guid accountId)
     {
-        var account = await _unit.Account.SingleAsync(account => account.Id == id);
+        var account = await _unit.Account.SingleAsync(account => account.AccountId == accountId);
         if (account is null)
         {
             return NotFound();

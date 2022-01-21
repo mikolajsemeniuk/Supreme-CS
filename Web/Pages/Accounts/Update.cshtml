@@ -10,7 +10,7 @@
 </h1>
 <form method="post" class="w-50">
     <div asp-validation-summary="All" class="text-danger"></div>
-    <input asp-for="@Model.Input.Id" type="hidden">
+    <input asp-for="@Model.Input.AccountId" type="hidden">
     <div class="form-group mt-3">
         <label asp-for="@Model.Input.FullName" class="text-muted"></label>
         <input asp-for="@Model.Input.FullName" class="form-control">

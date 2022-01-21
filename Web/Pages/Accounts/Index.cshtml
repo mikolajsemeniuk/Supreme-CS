@@ -82,22 +82,22 @@
                     @account.RelationshipStatus
                 </td>
                 <td>
-                    <a asp-page="/Orders/Index" asp-route-id="@account.Id" class="btn btn-success text-white">
+                    <a asp-page="/Orders/Index" asp-route-accountid="@account.AccountId" class="btn btn-success text-white">
                         Orders
                     </a>
                 </td>
                 <td>
-                    <a asp-page="/Accounts/Details" asp-route-id="@account.Id" class="btn btn-info text-white">
+                    <a asp-page="/Accounts/Details" asp-route-accountid="@account.AccountId" class="btn btn-info text-white">
                         Details
                     </a>
                 </td>
                 <td>
-                    <a asp-page="/Accounts/Update" asp-route-id="@account.Id" class="btn btn-warning text-white">
+                    <a asp-page="/Accounts/Update" asp-route-accountid="@account.AccountId" class="btn btn-warning text-white">
                         Update
                     </a>
                 </td>
                 <td>
-                    <a asp-page="/Accounts/Remove" asp-route-id="@account.Id" class="btn btn-danger">
+                    <a asp-page="/Accounts/Remove" asp-route-accountid="@account.AccountId" class="btn btn-danger">
                         Remove
                     </a>
                 </td>

@@ -2,8 +2,9 @@ using Data.Enums;
 
 namespace Data.Entities;
 
-public class Account : BaseEntity
+public class Account
 {
+    public Guid AccountId { get; set; } = Guid.NewGuid();
     public string FullName { get; set; }
     public string EmailAddress { get; set; }
     public string PhoneNumber { get; set; }
@@ -12,6 +13,9 @@ public class Account : BaseEntity
     public bool IsExternalContractor { get; set; }
     public RelationshipStatus RelationshipStatus { get; set; }
     public string Note { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime? UpdatedAt { get; set; }
     public ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public Account(string fullName,

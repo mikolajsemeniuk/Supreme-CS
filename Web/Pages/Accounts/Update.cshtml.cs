@@ -18,14 +18,14 @@ public class UpdateModel : PageModel
         _unit = unit;
     }
 
-    public async Task<IActionResult> OnGet(Guid id)
+    public async Task<IActionResult> OnGet(Guid accountId)
     {
-        var account = await _unit.Account.SingleAsync(account => account.Id == id, track: Track.NoTracking);
+        var account = await _unit.Account.SingleAsync(account => account.AccountId == accountId, track: Track.NoTracking);
         if (account is null)
         {
-            return RedirectToPage($"/Errors/NotFound", new { message = $"Account with id: {id} does not exist" });
+            return RedirectToPage($"/Errors/NotFound", new { message = $"Account with id: {accountId} does not exist" });
         }
-        Input.Id = account.Id;
+        Input.AccountId = account.AccountId;
         Input.FullName = account.FullName;
         Input.EmailAddress = account.EmailAddress;
         Input.PhoneNumber = account.PhoneNumber;
@@ -43,10 +43,10 @@ public class UpdateModel : PageModel
         {
             return Page();
         }
-        var account = await _unit.Account.SingleAsync(account => account.Id == Input.Id);
+        var account = await _unit.Account.SingleAsync(account => account.AccountId == Input.AccountId);
         if (account is null)
         {
-            return RedirectToPage($"/Errors/NotFound", new { message = $"Account with id: {Input.Id} does not exist" });
+            return RedirectToPage($"/Errors/NotFound", new { message = $"Account with id: {Input.AccountId} does not exist" });
         }
         account.FullName = Input.FullName;
         account.EmailAddress = Input.EmailAddress;
@@ -56,6 +56,7 @@ public class UpdateModel : PageModel
         account.IsExternalContractor = Input.IsExternalContractor;
         account.RelationshipStatus = Input.RelationshipStatus;
         account.Note = Input.Note;
+        account.UpdatedAt = DateTime.Now;
         _unit.Account.Update(account);
         if (await _unit.SaveChangesAsync() > 0)
         {

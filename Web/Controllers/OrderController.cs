@@ -33,14 +33,14 @@ public class OrderController : BaseController
     /// <summary>
     /// Get order by id
     /// </summary>
-    [HttpGet("{id}")]
+    [HttpGet("{orderId}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Account>> GetById(Guid id)
+    public async Task<ActionResult<Account>> GetById(Guid orderId)
     {
-        var order = await _unit.Order.SingleAsync(order => order.Id == id, track: Track.NoTracking);
+        var order = await _unit.Order.SingleAsync(order => order.OrderId == orderId, track: Track.NoTracking);
         if (order is null)
         {
             return NotFound();
@@ -62,7 +62,7 @@ public class OrderController : BaseController
         _unit.Order.Add(order);
         if (await _unit.SaveChangesAsync() > 0)
         {
-            return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
+            return CreatedAtAction(nameof(GetById), new { orderId = order.OrderId }, order);
         }
         return BadRequest();
     }
@@ -114,15 +114,15 @@ public class OrderController : BaseController
     /// <summary>
     /// Update order
     /// </summary>
-    [HttpPatch("{id}")]
+    [HttpPatch("{orderId}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Account>> Update(Guid id, [FromBody] OrderInput input)
+    public async Task<ActionResult<Account>> Update(Guid orderId, [FromBody] OrderInput input)
     {
-        var order = await _unit.Order.SingleAsync(order => order.Id == id);
+        var order = await _unit.Order.SingleAsync(order => order.OrderId == orderId);
         if (order is null)
         {
             return NotFound();
@@ -139,15 +139,15 @@ public class OrderController : BaseController
     /// <summary>
     /// Remove order
     /// </summary>
-    [HttpDelete("{id}")]
+    [HttpDelete("{orderId}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<object>> Remove(Guid id)
+    public async Task<ActionResult<object>> Remove(Guid orderId)
     {
-        var order = await _unit.Order.SingleAsync(order => order.Id == id);
+        var order = await _unit.Order.SingleAsync(order => order.OrderId == orderId);
         if (order is null)
         {
             return NotFound();

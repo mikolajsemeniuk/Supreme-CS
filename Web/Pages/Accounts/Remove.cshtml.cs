@@ -13,12 +13,12 @@ public class RemoveModel : PageModel
         _unit = unit;
     }
 
-    public async Task<IActionResult> OnGet(Guid id)
+    public async Task<IActionResult> OnGet(Guid accountId)
     {
-        var account = await _unit.Account.SingleAsync(account => account.Id == id);
+        var account = await _unit.Account.SingleAsync(account => account.AccountId == accountId);
         if (account is null)
         {
-            return RedirectToPage($"/Errors/NotFound", new { message = $"Account with id: {id} does not exist" });
+            return RedirectToPage($"/Errors/NotFound", new { message = $"Account with id: {accountId} does not exist" });
         }
         _unit.Account.Remove(account);
         if (await _unit.SaveChangesAsync() > 0)

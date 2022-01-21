@@ -5,7 +5,7 @@ using Service.Enums;
 
 namespace Service.Interfaces;
 
-public interface IBaseRepository<T> where T : BaseEntity
+public interface IBaseRepository<T> where T : class
 {
     Task<IEnumerable<T>> AllAsync(
         Expression<Func<T, bool>>? filter = null,

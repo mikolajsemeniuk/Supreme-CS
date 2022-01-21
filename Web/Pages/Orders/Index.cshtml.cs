@@ -14,8 +14,8 @@ public class IndexModel : PageModel
         _unit = unit;
     }
 
-    public async Task OnGet(Guid id)
+    public async Task OnGet(Guid accountid)
     {
-        Orders = await _unit.Order.AllAsync(filter: order => order.AccountId == id);
+        Orders = await _unit.Order.AllAsync(filter: order => order.AccountId == accountid);
     }
 }

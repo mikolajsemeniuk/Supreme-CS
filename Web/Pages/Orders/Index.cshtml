@@ -55,12 +55,12 @@
                     @order.FailureCounter
                 </td>
                 <td>
-                    <a asp-page="/Accounts/Update" asp-route-id="@order.Id" class="btn btn-warning text-white">
+                    <a asp-page="/Orders/Update" asp-route-orderid="@order.OrderId" class="btn btn-warning text-white">
                         Update
                     </a>
                 </td>
                 <td>
-                    <a asp-page="/Accounts/Remove" asp-route-id="@order.Id" class="btn btn-danger">
+                    <a asp-page="/Orders/Remove" asp-route-orderid="@order.OrderId" class="btn btn-danger">
                         Remove
                     </a>
                 </td>
